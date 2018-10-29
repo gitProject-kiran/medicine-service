@@ -11,7 +11,26 @@ var app        = express();
 var mongoose   = require('mongoose');              // define our app using express
 var bodyParser = require('body-parser');
 
-mongoose.connect('mongodb://localhost/medicinedatabase', { useNewUrlParser: true } );
+var MongoClient = require('mongodb').MongoClient;
+
+//Use for version 3.6 later;
+var uri = "mongodb+srv://kiran:Jamshift@123@cluster0-e0lyg.mongodb.net/pincodeDetails?retryWrites=true";
+MongoClient.connect(uri, function(err, client) {
+//   const collection = client.db("pincodeDetails").collection("devices");
+console.log('vvv', client);
+   client.close();
+});
+
+//Use for version 3.4 earlier;
+/* var MongoClient = require('mongodb').MongoClient;
+
+var uri = "mongodb://kiran:Jamshift@123@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin";
+MongoClient.connect(uri, function(err, db) {
+    console.log("========>", db);
+   db.close();
+}); */
+
+//mongoose.connect('mongodb://localhost/medicinedatabase', { useNewUrlParser: true } );
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
