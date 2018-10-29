@@ -1,5 +1,3 @@
-//mongoose.connect('mongodb://localhost/medicinedatabase');
-
 // server.js
 
 // BASE SETUP
@@ -13,22 +11,19 @@ var bodyParser = require('body-parser');
 
 var MongoClient = require('mongodb').MongoClient;
 
-//Use for version 3.6 later;
-var uri = "mongodb+srv://kiran:Jamshift@123@cluster0-e0lyg.mongodb.net/pincodeDetails?retryWrites=true";
-MongoClient.connect(uri, function(err, client) {
-//   const collection = client.db("pincodeDetails").collection("devices");
-console.log('vvv', client);
-   client.close();
+// replace the uri string with your connection string.
+const uri = "mongodb://admin:admin@cluster0-shard-00-00-7bx9r.mongodb.net:27017,cluster0-shard-00-01-7bx9r.mongodb.net:27017,cluster0-shard-00-02-7bx9r.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
+var collection ;
+MongoClient.connect(uri, { useNewUrlParser: true }, function(err, client) {
+   if(err) {
+        console.log('Error occurred while connecting to MongoDB Atlas...\n',err);
+   }
+   console.log('Connected...');
+   //collection = client.db("medicine").collection("pincode");
+   // perform actions on the collection object
+   //console.log("========", collection)
+   //client.close();
 });
-
-//Use for version 3.4 earlier;
-/* var MongoClient = require('mongodb').MongoClient;
-
-var uri = "mongodb://kiran:Jamshift@123@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin";
-MongoClient.connect(uri, function(err, db) {
-    console.log("========>", db);
-   db.close();
-}); */
 
 //mongoose.connect('mongodb://localhost/medicinedatabase', { useNewUrlParser: true } );
 
@@ -53,7 +48,17 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    var response = {};
+    collection.find({},function(err,data){
+    // Mongo command to fetch all data from collection.
+        if(err) {
+            response = {"error" : true,"message" : "Error fetching data"};
+        } else {
+            response = {"error" : false,"message" : data};
+        }
+        res.json(JSON.stringify(response));
+    });
+    //res.json({ message: 'hooray! welcome to our api!' });   
 });
 
 // more routes for our API will happen here
