@@ -3,7 +3,9 @@ var Schema       = mongoose.Schema;
 
 var PincodeSchema   = new Schema({
     pincode: Number,
-    address: String
+    address: String,
+    city: String,
+    state: String
 });
 
 module.exports = mongoose.model('Pincode', PincodeSchema);
