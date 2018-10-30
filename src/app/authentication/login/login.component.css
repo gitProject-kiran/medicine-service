@@ -1,0 +1,45 @@
+Html, body{
+	height:100%;
+    margin:0px;
+    padding:0px;
+}
+.grandParentContaniner{
+    display:table;
+    height:93.2%;
+    margin: 0 auto;
+}
+.parentContainer{
+    display:table-cell;
+    vertical-align:middle;  
+}
+.parentContainer #loginForm{
+    background:#ddd;
+    border:1px solid #eee;
+    padding:10px; 
+    width:400px;  /*  your login form width */
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .mat-card-header-text{
+    margin: auto !important;
+}
+
+table{
+    width:100%;
+}
+
+::ng-deep .mat-input-wrapper{
+    width:400px !important;
+}
+
+.title{
+    font-weight: bold;
+}
+
+.login-btn{
+    text-align: center;
+}
