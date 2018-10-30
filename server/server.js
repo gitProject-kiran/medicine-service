@@ -1,5 +1,3 @@
-//mongoose.connect('mongodb://localhost/medicinedatabase');
-
 // server.js
 
 // BASE SETUP
@@ -13,22 +11,19 @@ var bodyParser = require('body-parser');
 
 var MongoClient = require('mongodb').MongoClient;
 
-//Use for version 3.6 later;
-var uri = "mongodb+srv://kiran:Jamshift@123@cluster0-e0lyg.mongodb.net/pincodeDetails?retryWrites=true";
-MongoClient.connect(uri, function(err, client) {
-//   const collection = client.db("pincodeDetails").collection("devices");
-console.log('vvv', client);
-   client.close();
+// replace the uri string with your connection string.
+const uri = "mongodb://admin:admin@cluster0-shard-00-00-7bx9r.mongodb.net:27017,cluster0-shard-00-01-7bx9r.mongodb.net:27017,cluster0-shard-00-02-7bx9r.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
+var collection ;
+MongoClient.connect(uri, { useNewUrlParser: true }, function(err, client) {
+   if(err) {
+        console.log('Error occurred while connecting to MongoDB Atlas...\n',err);
+   }
+   console.log('Connected...');
+   //collection = client.db("medicine").collection("pincode");
+   // perform actions on the collection object
+   //console.log("========", collection)
+   //client.close();
 });
-
-//Use for version 3.4 earlier;
-/* var MongoClient = require('mongodb').MongoClient;
-
-var uri = "mongodb://kiran:Jamshift@123@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin";
-MongoClient.connect(uri, function(err, db) {
-    console.log("========>", db);
-   db.close();
-}); */
 
 //mongoose.connect('mongodb://localhost/medicinedatabase', { useNewUrlParser: true } );
 
@@ -39,6 +34,7 @@ app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;        // set our port
 var Bear = require('./models/bears');
+var Pincode = require('./models/pincodes');
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
@@ -52,47 +48,57 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    var response = {};
+    collection.find({},function(err,data){
+    // Mongo command to fetch all data from collection.
+        if(err) {
+            response = {"error" : true,"message" : "Error fetching data"};
+        } else {
+            response = {"error" : false,"message" : data};
+        }
+        res.json(JSON.stringify(response));
+    });
+    //res.json({ message: 'hooray! welcome to our api!' });   
 });
 
 // more routes for our API will happen here
 // on routes that end in /bears
 // ----------------------------------------------------
-router.route('/bears')
+router.route('/pincode')
 
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
 
-        var bear = new Bear();      // create a new instance of the Bear model
-        bear.name = req.body.name;  // set the bears name (comes from the request)
+        var pincode = new Pincode();      // create a new instance of the Bear model
+        pincode.name = req.body.name;  // set the bears name (comes from the request)
 
         // save the bear and check for errors
-        bear.save(function(err) {
+        pincode.save(function(err) {
             if (err)
                 res.send(err);
 
-            res.json({ message: 'Bear created!' });
+            res.json({ message: 'Pincode created!' });
         });
 
     })
 
     .get(function(req, res) {
-        Bear.find(function(err, bears) {
+        Pincode.find(function(err, pincode) {
             if (err)
                 res.send(err);
 
-            res.json(bears);
+            res.json(pincode);
         });
     });
 
-router.route('/bears/:bear_id')
+router.route('/pincode/:pincode_id')
 
     // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {
-        Bear.findById(req.params.bear_id, function(err, bear) {
+        Bear.findById(req.params.bear_id, function(err, pincode) {
             if (err)
                 res.send(err);
-            res.json(bear);
+            res.json(pincode);
         });
     })
     
@@ -100,28 +106,28 @@ router.route('/bears/:bear_id')
     .put(function(req, res) {
 
         // use our bear model to find the bear we want
-        Bear.findById(req.params.bear_id, function(err, bear) {
+        Pincode.findById(req.params.pincode_id, function(err, pincode) {
 
             if (err)
                 res.send(err);
 
-            bear.name = req.body.name;  // update the bears info
+            pincode.name = req.body.name;  // update the bears info
 
             // save the bear
-            bear.save(function(err) {
+            pincode.save(function(err) {
                 if (err)
                     res.send(err);
 
-                res.json({ message: 'Bear updated!' });
+                res.json({ message: 'Pincode updated!' });
             });
 
         });
     })
     
     .delete(function(req, res) {
-        Bear.remove({
-            _id: req.params.bear_id
-        }, function(err, bear) {
+        Pincode.remove({
+            _id: req.params.pincode_id
+        }, function(err, pincode) {
             if (err)
                 res.send(err);
 
