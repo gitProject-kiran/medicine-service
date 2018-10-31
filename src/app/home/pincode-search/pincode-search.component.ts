@@ -12,6 +12,14 @@ import { map, catchError, tap } from 'rxjs/operators';
   styleUrls: ['./pincode-search.component.css']
 })
 export class PincodeSearchComponent implements OnInit {
+  locationInput:any = '';
+  isSettingsError:any= '';
+  userQuerySubmit(){
+
+  }
+  currentLocationSelected(){
+    
+  }
   endpoint = '/api/pincodes';
   httpOptions = {
     headers: new HttpHeaders({

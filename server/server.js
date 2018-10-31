@@ -38,8 +38,6 @@ router.use(function(req, res, next) {
     next(); // make sure we go to the next routes and don't stop here
 });
 
-
-
 router.route("/pincodes")
     .get(pincodeController.listAllPincodes)    
     .post(pincodeController.createNewPincode);
@@ -48,6 +46,7 @@ router.route("/pincodes")
 // all of our routes will be prefixed with /api
 
 app.use('/api', router);
+
 app.get('/*',function(req,res){
     res.sendFile(__dirname + '/public/index.html'); 
 });
