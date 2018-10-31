@@ -10,6 +10,7 @@ const pincodes = require("../models/pincodes");
 }; */
 
 exports.listAllPincodes = (req, res) => {
+  console.log("=======>")
   pincodes.find({PINCode: new RegExp(req.query.query, "i")}, (err, task) => {
     if (err) {
       res.status(500).send(err);

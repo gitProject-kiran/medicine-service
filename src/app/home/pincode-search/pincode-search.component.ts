@@ -12,31 +12,29 @@ import { map, catchError, tap } from 'rxjs/operators';
   styleUrls: ['./pincode-search.component.css']
 })
 export class PincodeSearchComponent implements OnInit {
-   endpoint = 'http://localhost:8080/api/pincodes';
- httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json'
-  })
-};
+  endpoint = '/api/pincodes';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
 
-queryItems : any = [];
+  queryItems: any = [];
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
   }
 
-  getPincodes(val){
-      console.log("=====>", val)
-      this.http.get(this.endpoint + '?query=' + val).subscribe(
+  getPincodes(val) {
+    this.http.get(this.endpoint + '?query=' + val).subscribe(
       response => {
         this.queryItems = response;
-        console.log("====this.queryItems  ", this.queryItems );
-      });     
+      });
   }
 
   private extractData(res: Response) {
     let body = res;
-    return body || { };
+    return body || {};
   }
 
 }

@@ -8,6 +8,7 @@ var express    = require('express');        // call express
 var app        = express();   
 var mongoose   = require('mongoose');              // define our app using express
 var bodyParser = require('body-parser');
+var path = require("path");
 const pincodeController = require("./controllers/pincodeController");
 
 //db instance connections
@@ -19,8 +20,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;        // set our port
+
+app.use(express.static(path.join(__dirname, 'public/')));
+
+
 var Bear = require('./models/bears');
 var Pincode = require('./models/pincodes');
+
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
@@ -40,8 +46,11 @@ router.route("/pincodes")
     
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api', router);
 
+app.use('/api', router);
+app.get('/*',function(req,res){
+    res.sendFile(__dirname + '/public/index.html'); 
+});
 // START THE SERVER
 // =============================================================================
 app.listen(port);
