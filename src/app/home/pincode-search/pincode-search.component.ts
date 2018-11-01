@@ -5,6 +5,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { GlobalRef, BrowserGlobalRef, NodeGlobalRef } from './MyGlobal';
+
+
 
 @Component({
   selector: 'app-pincode-search',
@@ -17,18 +20,20 @@ export class PincodeSearchComponent implements OnInit {
   userQuerySubmit(){
 
   }
-  currentLocationSelected(){
-    
-  }
-  endpoint = '/api/pincodes';
+  endpoint = 'http://localhost:8080/api/pincodes';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   };
+  showCurrentLocation:boolean=false;
+  public gettingCurrentLocationFlag: boolean = false;
+  public dropdownOpen: boolean = false;
 
   queryItems: any = [];
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private _global: GlobalRef) { }
 
   ngOnInit() {
   }
@@ -43,6 +48,43 @@ export class PincodeSearchComponent implements OnInit {
   private extractData(res: Response) {
     let body = res;
     return body || {};
+  }
+
+  getGeoCurrentLocation(): Promise<any> {
+    return new Promise(resolve => {
+      if (isPlatformBrowser(this.platformId)) {
+        let _window: any = this._global.nativeGlobal;
+        if (_window.navigator.geolocation) {
+          _window.navigator.geolocation.getCurrentPosition((pos) => {
+            let latlng: any = {lat: parseFloat(pos.coords.latitude + ''), lng: parseFloat(pos.coords.longitude + '')};
+            resolve(latlng);
+          }, (error) => {
+            resolve(false);
+          });
+        }else {
+          resolve(false);
+        }
+      }else {
+        resolve(false);
+      }
+    });
+  }
+
+  //function to get user current location from the device.
+  currentLocationSelected(): any {
+    if (isPlatformBrowser(this.platformId)) {
+      this.gettingCurrentLocationFlag = true;
+      this.dropdownOpen = false;
+      this.getGeoCurrentLocation().then((result: any) => {
+        if (!result) {
+          this.gettingCurrentLocationFlag = false;
+          //this.componentCallback.emit({'response': false, 'reason': 'Failed to get geo location'});
+        }else {
+          console.log("======>", result);
+          //this.getCurrentLocationInfo(result);
+        }
+      });
+    }
   }
 
 }

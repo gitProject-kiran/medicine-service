@@ -1,0 +1,2 @@
+import { MyGlobal } from "./MyGlobal";
+

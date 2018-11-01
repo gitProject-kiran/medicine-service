@@ -7,6 +7,7 @@ import { PincodeSearchComponent } from './pincode-search/pincode-search.componen
 import { Ng4GeoautocompleteModule } from 'ng4-geoautocomplete';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { GlobalRef, BrowserGlobalRef } from './pincode-search/MyGlobal';
 @NgModule({
   imports: [
     CommonModule,
@@ -17,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     Ng4GeoautocompleteModule.forRoot()
   ],
-  declarations: [PincodeSearchComponent]
+  declarations: [PincodeSearchComponent],
+  providers : [{ provide: GlobalRef, useClass: BrowserGlobalRef }]
 })
 export class HomeModule { }
