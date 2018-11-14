@@ -78,13 +78,43 @@ export class PincodeSearchComponent implements OnInit {
       this.getGeoCurrentLocation().then((result: any) => {
         if (!result) {
           this.gettingCurrentLocationFlag = false;
+          console.log("result ===>", result);
+         
           //this.componentCallback.emit({'response': false, 'reason': 'Failed to get geo location'});
         }else {
           console.log("======>", result);
+          this.getGeoLatLngDetail(result).then(res =>{
+             console.log("== res ===>", res);
+             this.locationInput = res.long_name;
+            this.gettingCurrentLocationFlag = false;
+          });
+         
           //this.getCurrentLocationInfo(result);
         }
       });
     }
   }
+
+  getGeoLatLngDetail(latlng: any): Promise<any> {
+    return new Promise(resolve => {
+      if (isPlatformBrowser(this.platformId)) {
+        let _window: any = this._global.nativeGlobal;
+        let geocoder: any = new _window.google.maps.Geocoder;
+        geocoder.geocode({'location': latlng}, (results, status) => {
+          if (status === 'OK') {
+                console.log("results", results[0].address_components[results[0].address_components.length - 1])
+                let result = results[0].address_components[results[0].address_components.length - 1];
+                resolve(result);           
+          } else {
+            resolve(false);
+          }
+        });
+      }else {
+        resolve(false);
+      }
+    });
+  }
+
+  
 
 }

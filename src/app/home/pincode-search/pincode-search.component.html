@@ -29,12 +29,12 @@
         </ng-template> -->
 
         <div class="custom-autocomplete">
-          <div class="custom-autocomplete__container" >
+          <div class="custom-autocomplete__container">
             <div class="custom-autocomplete__input">
-              <input  [(ngModel)]="locationInput"  (focus)="showCurrentLocation = true;" (keyup)="getPincodes(locationInput)"
-               type="search" name="search" id="search_places"  autocomplete="off">
+              <input [(ngModel)]="locationInput" (focus)="showCurrentLocation = true;" (keyup)="getPincodes(locationInput)" type="search"
+                name="search" placeholder="Search for medicines & healthcare products" id="search_places" autocomplete="off">
               <button class="search-icon" (click)="userQuerySubmit()">
-                <i  class="search-default-icon"></i>
+                <i class="search-default-icon"></i>
               </button>
             </div>
             <pre class="custom-autocomplete__loader" *ngIf="gettingCurrentLocationFlag"><i class="gif"></i></pre>
@@ -45,21 +45,24 @@
                 <i class="location-icon"></i>Use Current Location
               </a>
             </li>
-            <li class="heading heading-recent" *ngIf="queryItems.length"><span>Locations</span><span class="line line-location"></span></li>
-           
-            <li *ngFor = "let data of queryItems;let $index = index" [ngClass]="{'active': data.active}">
+            <li class="heading heading-recent" *ngIf="queryItems.length">
+              <span>Locations</span>
+              <span class="line line-location"></span>
+            </li>
+
+            <li *ngFor="let data of queryItems;let $index = index" [ngClass]="{'active': data.active}">
               <a href="javascript:;" (click)="selectedListNode($index)">
                 <i class="custom-icon location-default-icon"></i>
-                  <span class="main-text">
-                    {{data.PINCode}}
-                  </span>
-                  <span class="secondary_text">{{data.Name}}</span>
+                <span class="main-text">
+                  {{data.PINCode}}
+                </span>
+                <span class="secondary_text">{{data.Name}}</span>
               </a>
             </li>
           </ul>
         </div>
         <div class="custom-autocomplete--error" *ngIf="isSettingsError">{{settingsErrorMsg}}</div>
-      
+
       </section>
 
     </div>
